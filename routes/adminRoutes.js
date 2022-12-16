@@ -20,7 +20,8 @@ router.post("/signin", userController.login);
 ///// Routes for User
 ///////////////////////////////////////
 
-router.get("/users", auth, userController.getAllUser)
+// router.get("/users", auth, userController.getAllUser)
+router.get("/users", userController.getAllUser)
 
 
 
