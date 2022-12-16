@@ -1,0 +1,27 @@
+{
+  
+  "development": {
+    "username": "sql6585104",
+    "password": "8dc254JNEG",
+    "database": "sql6585104",
+    "host": "sql6.freesqldatabase.com",
+    "dialect": "mysql",
+    "port":"3306"
+  },
+  "test": {
+    "username": "sql6585104",
+    "password": "8dc254JNEG",
+    "database": "sql6585104",
+    "host": "sql6.freesqldatabase.com",
+    "dialect": "mysql",
+    "port":"3306"
+  },
+  "production": {
+    "username": "sql6585104",
+    "password": "8dc254JNEG",
+    "database": "sql6585104",
+    "host": "sql6.freesqldatabase.com",
+    "dialect": "mysql",
+    "port":"3306"
+  }
+}
