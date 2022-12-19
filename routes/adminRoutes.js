@@ -4,18 +4,11 @@ const userController = require("../controllers/userController");
 const postController = require("../controllers/postController");
 const auth = require("../middleware/auth");
 
-
-
-
 /////////////
 //// Routes for User Login and forgot password
 /////////////
 
 router.post("/signin", userController.login);
-
-
-
-
 
 ///////////////////////////////////////
 ///// Routes for User
@@ -28,10 +21,11 @@ router.put("/user/:id", auth, userController.updateSingleUser);
 router.delete("/user/:id", auth, userController.deleteUser);
 router.put("/user/forgot-password/:id", auth, userController.forgotPassword);
 
+////////////////////////////////////
+// ///// DASHBOARD API BY GHULAM RASOOL
+////////////////////////////////////
 
-
-
-
+router.get("/dashboard", auth, userController.dashboard);
 ///////////////////////////////////////
 ///// Routes for Post
 ///////////////////////////////////////
@@ -40,6 +34,5 @@ router.get("/post", auth, postController.getAllPost);
 router.get("/post/:id", auth, postController.getSinglePost);
 router.put("/post/:id", auth, postController.updateSinglePost);
 router.delete("/post/:id", auth, postController.deletePost);
-
 
 module.exports = router;
