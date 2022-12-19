@@ -302,10 +302,12 @@ exports.dashboard = async (req, res, next) => {
       res.status(200).json({
         message: "Data get successfully.",
         success: 1,
-        totalUsers: data.length,
-        totalPosts: postLength.length,
-        totalActive: userActive.length,
-        totalInActive: userInActive.length,
+        data: {
+          totalUsers: data.length,
+          totalPosts: postLength.length,
+          totalActive: userActive.length,
+          totalInActive: userInActive.length,
+        },
       });
     }
   } catch (error) {
