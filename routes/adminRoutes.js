@@ -37,8 +37,9 @@ router.put("/user/forgot-password/:id", auth, userController.forgotPassword);
 ///////////////////////////////////////
 
 router.get("/post", auth, postController.getAllPost);
-
-
+router.get("/post/:id", auth, postController.getSinglePost);
+router.put("/post/:id", auth, postController.updateSinglePost);
+router.delete("/post/:id", auth, postController.deletePost);
 
 
 module.exports = router;

@@ -42,4 +42,91 @@ exports.getAllPost = async (req, res, next) => {
 
 
 
+// update single Post Data
+exports.updateSinglePost = async (req, res, next) => {
+
+
+  await wp_posts.update(req.body, {
+    where: {
+      ID: req.params.id
+    }
+  });
+  res.status(200).json({
+    message: "Post updated succesfully",
+    success: 1
+  });
+
+};
+
+
+
+
+// display single Post data 
+exports.getSinglePost = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    let data = await wp_posts.findOne({
+      where: {
+        ID: id
+      }
+    });
+
+    if (data === null || data == undefined) {
+      res.status(200).json({
+        data: data,
+        message: "No post exist",
+        success: 1,
+      });
+    } else {
+
+      res.status(200).json({
+        data: data,
+        message: "Post get Successfully.",
+        success: 1,
+      });
+    }
+
+  } catch (error) {
+    res.status(500).json({
+      data: [],
+      message: "Server Internal Error.",
+      success: 0
+    })
+
+  }
+
+};
+
+
+
+
+// Delete Post 
+exports.deletePost = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    let post = await wp_posts.findOne({ where: { ID: id } });
+    if (post === null) {
+      return res.status(400).json({
+        message: "post does not exist.",
+        success: 0,
+      });
+    } else {
+      await wp_posts.destroy({
+        where: {
+          ID: id
+        }
+      });
+      return res.status(200).json({
+        message: "post deleted successfully.",
+        success: 1,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Internal Error.",
+      success: 0
+    })
+  }
+};
+
 
