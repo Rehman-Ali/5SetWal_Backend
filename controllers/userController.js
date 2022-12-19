@@ -235,18 +235,18 @@ exports.deleteUser = async (req, res, next) => {
   try {
     let id = req.params.id;
     let user = await wp_users.findOne({ where: { ID: id } });
-    if(user === null){
-      return  res.status(400).json({
+    if (user === null) {
+      return res.status(400).json({
         message: "user does not exist.",
         success: 0,
       });
-    }else{
+    } else {
       await wp_users.destroy({
         where: {
           ID: id
         }
       });
-     return  res.status(200).json({
+      return res.status(200).json({
         message: "user deleted successfully.",
         success: 1,
       });
@@ -263,7 +263,53 @@ exports.deleteUser = async (req, res, next) => {
 
 
 
+// forgot password
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    let user = await wp_users.findOne({ where: { ID: id } });
+    if (!user || user === null) {
+      return res.status(400).json({
+        message: "User does not exist.",
+        success: 0
+      });
+    }
+    const compare = await bcrypt.compare(
+      req.body.old_password,
+      user.dataValues.user_pass
+    );
 
+    if (compare) {
+      const hash = await bcrypt.hash(req.body.new_password, 10);
+
+      let body = {
+        user_pass: hash
+      }
+      await wp_users.update(body, {
+        where: {
+          ID: req.params.id
+        }
+      });
+      return res.status(200).json({
+        message: "Password update successfully.",
+        success: 1
+      });
+    } else {
+      return res.status(400).json({
+        message: "password does not match",
+        success: 0
+      });
+    }
+
+  } catch (error) {
+    res.status(500).json({
+      data: [],
+      message: "Server Internal Error.",
+      success: 0
+    })
+
+  }
+}
 
 
 
