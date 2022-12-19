@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'wp_users',
     timestamps: false
+ 
   });
   return wp_users;
 };
