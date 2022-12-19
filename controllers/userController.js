@@ -63,7 +63,7 @@ exports.login = async (req, res, next) => {
   if (email.length === 0 || password.length === 0) {
     errors = true;
     // send message
-    res.status(400).json({
+    res.status(201).json({
       message: "Please enter email and password",
       success: 0,
     });
