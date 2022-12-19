@@ -77,7 +77,7 @@ exports.login = async (req, res, next) => {
   if (!errors) {
     let user = await wp_users.findOne({ where: { user_email: email } });
     if (!user || user === null) {
-      return res.status(400).json({
+      return res.status(201).json({
         message: "User does not exist.",
         success: 0
       });
