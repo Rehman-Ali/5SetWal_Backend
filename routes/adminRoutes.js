@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const postController = require("../controllers/postController");
+const dashboardController = require("../controllers/dashboardController");
 const auth = require("../middleware/auth");
 
 /////////////
@@ -25,7 +26,7 @@ router.put("/chang-password", auth, userController.changePassword);
 // ///// DASHBOARD API 
 ////////////////////////////////////
 
-router.get("/dashboard", auth, userController.dashboard);
+router.get("/dashboard", auth, dashboardController.dashboard);
 ///////////////////////////////////////
 ///// Routes for Post
 ///////////////////////////////////////

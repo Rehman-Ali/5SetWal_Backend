@@ -279,45 +279,54 @@ exports.changePassword = async (req, res, next) => {
   }
 };
 
-// dispaly dashboard
-exports.dashboard = async (req, res, next) => {
+
+
+
+
+// get Deleted User
+exports.getDeletedUser = async (req, res, next) => {
   try {
-    let data = await wp_users.findAll();
-    const postLength = await wp_posts.findAll({
-      where: { post_type: "post" },
-    });
-    const userInActive = await wp_users.findAll({
-      where: {
-        user_status: 0,
-      },
-    });
-    const userActive = await wp_users.findAll({
-      where: {
-        user_status: 1,
-      },
-    });
-    if (data.length < 0) {
-      res.json({
-        message: "No data found!",
+    let id = req.user.ID;
+   
+    let user = await wp_users.findOne({ where: { ID: id } });
+    console.log("ID========", user)
+    if (!user || user === null) {
+      return res.status(400).json({
+        message: "User does not exist.",
         success: 0,
       });
-    } else {
-      res.status(200).json({
-        message: "Data get successfully.",
-        success: 1,
-        data: {
-          totalUsers: data.length,
-          totalPosts: postLength.length,
-          totalActive: userActive.length,
-          totalInActive: userInActive.length,
+    }
+    const compare = await bcrypt.compare(
+      req.body.old_password,
+      user.dataValues.user_pass
+    );
+
+    if (compare) {
+      const hash = await bcrypt.hash(req.body.new_password, 10);
+      let body = {
+        user_pass: hash,
+      };
+      await wp_users.update(body, {
+        where: {
+          ID: req.user.ID,
         },
+      });
+      return res.status(200).json({
+        message: "Password update successfully.",
+        success: 1,
+      });
+    } else {
+      return res.status(400).json({
+        message: "password does not match",
+        success: 0,
       });
     }
   } catch (error) {
     res.status(500).json({
+      data: [],
       message: "Server Internal Error.",
-      error,
       success: 0,
     });
   }
 };
+
