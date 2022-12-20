@@ -55,6 +55,7 @@ exports.getSinglePost = async (req, res, next) => {
       where: {
         ID: id,
       },
+       paranoid: false
     });
 
     if (data === null || data == undefined) {
