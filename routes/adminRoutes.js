@@ -19,10 +19,10 @@ router.post("/user", auth, userController.register);
 router.get("/user/:id", auth, userController.getSingleUser);
 router.put("/user/:id", auth, userController.updateSingleUser);
 router.delete("/user/:id", auth, userController.deleteUser);
-router.put("/user/change-password/:id", auth, userController.changePassword);
+router.put("/chang-password", auth, userController.changePassword);
 
 ////////////////////////////////////
-// ///// DASHBOARD API BY GHULAM RASOOL
+// ///// DASHBOARD API 
 ////////////////////////////////////
 
 router.get("/dashboard", auth, userController.dashboard);

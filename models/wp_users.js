@@ -27,12 +27,12 @@ module.exports = (sequelize, DataTypes) => {
     user_registered: DataTypes.DATE,
     user_activation_key: DataTypes.STRING,
     user_status: DataTypes.INTEGER,
-    display_name: DataTypes.STRING
+    display_name: DataTypes.STRING,
   }, {
     sequelize,
     paranoid: true,
     modelName: 'wp_users',
-    timestamps: false
+    timestamps: true
  
   });
   return wp_users;

@@ -236,7 +236,9 @@ exports.deleteUser = async (req, res, next) => {
 exports.changePassword = async (req, res, next) => {
   try {
     let id = req.user.ID;
+   
     let user = await wp_users.findOne({ where: { ID: id } });
+    console.log("ID========", user)
     if (!user || user === null) {
       return res.status(400).json({
         message: "User does not exist.",
@@ -250,13 +252,12 @@ exports.changePassword = async (req, res, next) => {
 
     if (compare) {
       const hash = await bcrypt.hash(req.body.new_password, 10);
-
       let body = {
         user_pass: hash,
       };
       await wp_users.update(body, {
         where: {
-          ID: req.params.id,
+          ID: req.user.ID,
         },
       });
       return res.status(200).json({

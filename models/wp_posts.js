@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     paranoid: true,
     modelName: 'wp_posts',
-    timestamps: false
+    timestamps: true
   });
   return wp_posts;
 };
