@@ -233,7 +233,7 @@ exports.deleteUser = async (req, res, next) => {
 // changePassword 
 exports.changePassword = async (req, res, next) => {
   try {
-    let id = req.params.id;
+    let id = req.user.ID;
     let user = await wp_users.findOne({ where: { ID: id } });
     if (!user || user === null) {
       return res.status(400).json({

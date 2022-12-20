@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     display_name: DataTypes.STRING
   }, {
     sequelize,
+    paranoid: true,
     modelName: 'wp_users',
     timestamps: false
  
