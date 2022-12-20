@@ -236,7 +236,7 @@ exports.deleteUser = async (req, res, next) => {
 exports.changePassword = async (req, res, next) => {
   try {
     let id = req.user.ID;
-   
+
     let user = await wp_users.findOne({ where: { ID: id } });
     console.log("ID========", user)
     if (!user || user === null) {
@@ -286,47 +286,86 @@ exports.changePassword = async (req, res, next) => {
 // get Deleted User
 exports.getDeletedUser = async (req, res, next) => {
   try {
-    let id = req.user.ID;
-   
-    let user = await wp_users.findOne({ where: { ID: id } });
-    console.log("ID========", user)
-    if (!user || user === null) {
-      return res.status(400).json({
-        message: "User does not exist.",
-        success: 0,
-      });
-    }
-    const compare = await bcrypt.compare(
-      req.body.old_password,
-      user.dataValues.user_pass
+
+    let deletedUser = await wp_users.findAll(
+      { where: { deletedAt: { [Op.not]: null } }, paranoid: false }
     );
 
-    if (compare) {
-      const hash = await bcrypt.hash(req.body.new_password, 10);
-      let body = {
-        user_pass: hash,
-      };
-      await wp_users.update(body, {
-        where: {
-          ID: req.user.ID,
-        },
-      });
+    if (deletedUser !== null) {
       return res.status(200).json({
-        message: "Password update successfully.",
+        data: deletedUser,
+        message: "user get successfully.",
         success: 1,
       });
     } else {
-      return res.status(400).json({
-        message: "password does not match",
-        success: 0,
+      return res.status(200).json({
+        data: [],
+        message: "no user found.",
+        success: 1,
       });
     }
+
+
   } catch (error) {
     res.status(500).json({
-      data: [],
       message: "Server Internal Error.",
       success: 0,
     });
   }
 };
 
+
+// restore Deleted User
+exports.restoreDeletedUser = async (req, res, next) => {
+  try {
+    let id = req.params.id
+    await wp_users.restore(
+      { where: { ID: id } }
+    );
+
+    return res.status(200).json({
+      message: "user restore successfully.",
+      success: 1,
+    });
+
+
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Internal Error.",
+      success: 0,
+    });
+  }
+};
+
+
+
+// Delete User Permanent
+exports.deleteUserPermanent = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    let user = await wp_users.findOne({ where: { ID: id } });
+    if (user === null) {
+      return res.status(400).json({
+        message: "user does not exist.",
+        success: 0,
+      });
+    } else {
+      await wp_users.destroy({
+        where: {
+          ID: id,
+        },
+        force: true
+      });
+      return res.status(200).json({
+        message: "user deleted successfully.",
+        success: 1,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Internal Error.",
+      success: 0,
+    });
+  }
+};

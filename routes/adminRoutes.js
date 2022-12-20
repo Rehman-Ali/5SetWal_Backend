@@ -21,6 +21,9 @@ router.get("/user/:id", auth, userController.getSingleUser);
 router.put("/user/:id", auth, userController.updateSingleUser);
 router.delete("/user/:id", auth, userController.deleteUser);
 router.put("/chang-password", auth, userController.changePassword);
+router.get("/deleted-user", auth, userController.getDeletedUser);
+router.post("/restore-user/:id", auth, userController.restoreDeletedUser);
+router.delete("/permanent-delete-user/:id", auth, userController.deleteUserPermanent);
 
 ////////////////////////////////////
 // ///// DASHBOARD API 
