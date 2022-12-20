@@ -92,7 +92,7 @@ exports.login = async (req, res, next) => {
         token: token,
       });
     } else {
-      res.status(400).json({
+      res.status(201).json({
         message: "Email and password are wrong.",
         success: 0,
       });
@@ -230,8 +230,8 @@ exports.deleteUser = async (req, res, next) => {
   }
 };
 
-// forgot password
-exports.forgotPassword = async (req, res, next) => {
+// changePassword 
+exports.changePassword = async (req, res, next) => {
   try {
     let id = req.params.id;
     let user = await wp_users.findOne({ where: { ID: id } });
