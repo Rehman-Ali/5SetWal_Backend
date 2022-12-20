@@ -43,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     comment_count: DataTypes.BIGINT
   }, {
     sequelize,
+    paranoid: true,
     modelName: 'wp_posts',
     timestamps: false
   });
