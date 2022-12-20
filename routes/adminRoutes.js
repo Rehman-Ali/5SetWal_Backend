@@ -38,5 +38,10 @@ router.get("/post", auth, postController.getAllPost);
 router.get("/post/:id", auth, postController.getSinglePost);
 router.put("/post/:id", auth, postController.updateSinglePost);
 router.delete("/post/:id", auth, postController.deletePost);
+router.get("/deleted-post", auth, postController.getDeletedPost);
+router.post("/restore-post/:id", auth, postController.restoreDeletedPost);
+router.delete("/permanent-delete-post/:id", auth, postController.deletePostPermanent);
+
+
 
 module.exports = router;

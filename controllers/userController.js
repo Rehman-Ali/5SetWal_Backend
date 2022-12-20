@@ -344,7 +344,7 @@ exports.restoreDeletedUser = async (req, res, next) => {
 exports.deleteUserPermanent = async (req, res, next) => {
   try {
     let id = req.params.id;
-    let user = await wp_users.findOne({ where: { ID: id } });
+    let user = await wp_users.findOne({ where: { ID: id },  paranoid: false  });
     if (user === null) {
       return res.status(400).json({
         message: "user does not exist.",
