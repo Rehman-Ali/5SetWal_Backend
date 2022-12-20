@@ -177,6 +177,7 @@ exports.getSingleUser = async (req, res, next) => {
       where: {
         ID: id,
       },
+       paranoid: false
     });
 
     if (data === null || data == undefined) {
@@ -277,44 +278,92 @@ exports.changePassword = async (req, res, next) => {
   }
 };
 
-// dispaly dashboard
-exports.dashboard = async (req, res, next) => {
+
+
+
+
+// get Deleted User
+exports.getDeletedUser = async (req, res, next) => {
   try {
-    let data = await wp_users.findAll();
-    const postLength = await wp_posts.findAll({
-      where: { post_type: "post" },
+
+    let deletedUser = await wp_users.findAll(
+      { where: { deletedAt: { [Op.not]: null } }, paranoid: false }
+    );
+
+    if (deletedUser !== null) {
+      return res.status(200).json({
+        data: deletedUser,
+        message: "user get successfully.",
+        success: 1,
+      });
+    } else {
+      return res.status(200).json({
+        data: [],
+        message: "no user found.",
+        success: 1,
+      });
+    }
+
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Internal Error.",
+      success: 0,
     });
-    const userInActive = await wp_users.findAll({
-      where: {
-        user_status: 0,
-      },
+  }
+};
+
+
+// restore Deleted User
+exports.restoreDeletedUser = async (req, res, next) => {
+  try {
+    let id = req.params.id
+    await wp_users.restore(
+      { where: { ID: id } }
+    );
+
+    return res.status(200).json({
+      message: "user restore successfully.",
+      success: 1,
     });
-    const userActive = await wp_users.findAll({
-      where: {
-        user_status: 1,
-      },
+
+
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Internal Error.",
+      success: 0,
     });
-    if (data.length < 0) {
-      res.json({
-        message: "No data found!",
+  }
+};
+
+
+
+// Delete User Permanent
+exports.deleteUserPermanent = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    let user = await wp_users.findOne({ where: { ID: id },  paranoid: false  });
+    if (user === null) {
+      return res.status(400).json({
+        message: "user does not exist.",
         success: 0,
       });
     } else {
-      res.status(200).json({
-        message: "Data get successfully.",
-        success: 1,
-        data: {
-          totalUsers: data.length,
-          totalPosts: postLength.length,
-          totalActive: userActive.length,
-          totalInActive: userInActive.length,
+      await wp_users.destroy({
+        where: {
+          ID: id,
         },
+        force: true
+      });
+      return res.status(200).json({
+        message: "user deleted successfully.",
+        success: 1,
       });
     }
   } catch (error) {
     res.status(500).json({
       message: "Server Internal Error.",
-      error,
       success: 0,
     });
   }

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const postController = require("../controllers/postController");
+const dashboardController = require("../controllers/dashboardController");
 const auth = require("../middleware/auth");
 
 /////////////
@@ -20,12 +21,15 @@ router.get("/user/:id", auth, userController.getSingleUser);
 router.put("/user/:id", auth, userController.updateSingleUser);
 router.delete("/user/:id", auth, userController.deleteUser);
 router.put("/chang-password", auth, userController.changePassword);
+router.get("/deleted-user", auth, userController.getDeletedUser);
+router.post("/restore-user/:id", auth, userController.restoreDeletedUser);
+router.delete("/permanent-delete-user/:id", auth, userController.deleteUserPermanent);
 
 ////////////////////////////////////
 // ///// DASHBOARD API 
 ////////////////////////////////////
 
-router.get("/dashboard", auth, userController.dashboard);
+router.get("/dashboard", auth, dashboardController.dashboard);
 ///////////////////////////////////////
 ///// Routes for Post
 ///////////////////////////////////////
@@ -34,5 +38,10 @@ router.get("/post", auth, postController.getAllPost);
 router.get("/post/:id", auth, postController.getSinglePost);
 router.put("/post/:id", auth, postController.updateSinglePost);
 router.delete("/post/:id", auth, postController.deletePost);
+router.get("/deleted-post", auth, postController.getDeletedPost);
+router.post("/restore-post/:id", auth, postController.restoreDeletedPost);
+router.delete("/permanent-delete-post/:id", auth, postController.deletePostPermanent);
+
+
 
 module.exports = router;

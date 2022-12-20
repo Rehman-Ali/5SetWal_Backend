@@ -55,6 +55,7 @@ exports.getSinglePost = async (req, res, next) => {
       where: {
         ID: id,
       },
+       paranoid: false
     });
 
     if (data === null || data == undefined) {
@@ -94,6 +95,95 @@ exports.deletePost = async (req, res, next) => {
         where: {
           ID: id,
         },
+      });
+      return res.status(200).json({
+        message: "post deleted successfully.",
+        success: 1,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Internal Error.",
+      success: 0,
+    });
+  }
+};
+
+
+
+// get Deleted Post
+exports.getDeletedPost = async (req, res, next) => {
+  try {
+
+    let deletedPost = await wp_posts.findAll(
+      { where: { deletedAt: { [Op.not]: null } }, paranoid: false }
+    );
+
+    if (deletedPost !== null) {
+      return res.status(200).json({
+        data: deletedPost,
+        message: "post get successfully.",
+        success: 1,
+      });
+    } else {
+      return res.status(200).json({
+        data: [],
+        message: "no post found.",
+        success: 1,
+      });
+    }
+
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Internal Error.",
+      success: 0,
+    });
+  }
+};
+
+
+// restore Deleted Post
+exports.restoreDeletedPost = async (req, res, next) => {
+  try {
+    let id = req.params.id
+    await wp_posts.restore(
+      { where: { ID: id } }
+    );
+
+    return res.status(200).json({
+      message: "post restore successfully.",
+      success: 1,
+    });
+
+
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Internal Error.",
+      success: 0,
+    });
+  }
+};
+
+
+
+// Delete Post Permanent
+exports.deletePostPermanent = async (req, res, next) => {
+  try {
+    let id = req.params.id;
+    let post = await wp_posts.findOne({ where: { ID: id }, paranoid: false });
+    if (post === null) {
+      return res.status(400).json({
+        message: "post does not exist.",
+        success: 0,
+      });
+    } else {
+      await wp_posts.destroy({
+        where: {
+          ID: id,
+        },
+        force: true
       });
       return res.status(200).json({
         message: "post deleted successfully.",
