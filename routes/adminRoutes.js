@@ -30,6 +30,7 @@ router.delete("/permanent-delete-user/:id", auth, userController.deleteUserPerma
 ////////////////////////////////////
 
 router.get("/dashboard", auth, dashboardController.dashboard);
+router.get("/dashboard-graph", auth, dashboardController.dashboardGraph);
 ///////////////////////////////////////
 ///// Routes for Post
 ///////////////////////////////////////
